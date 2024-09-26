@@ -23,12 +23,13 @@ exports.getAll = async (req, res) => {
  * Methode pour récupérer un post par son id, et les commentaires associés à ce post
  */
 exports.getById = async (req, res) => {
-    try{
-        let id = req.params.id;
-        let post = await Post.findById(id);
-        if(!post) res.status(404).json({message: "Le post n'existe pas"});
+    try {
+        let post = await Post.findById(req.params.id).populate('comments');
+        if (!post) {
+            return res.status(404).json({ message: "Le post n'existe pas" });
+        }
         res.status(200).json(post);
-    }catch(e){
+    } catch (e) {
         res.status(500).json(e.message);
     }
 }
