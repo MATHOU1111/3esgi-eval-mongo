@@ -24,9 +24,9 @@ exports.getAll = async (req, res) => {
  */
 exports.getById = async (req, res) => {
     try {
-        let post = await Post.findById(req.params.id).populate('comments');
+        let post = await Post.findById(req.params.id).populate("comments");
         if (!post) {
-            return res.status(404).json({ message: "Le post n'existe pas" });
+            return res.status(404).json({ message: "Le post n'existe pas"});
         }
         res.status(200).json(post);
     } catch (e) {
