@@ -1,7 +1,9 @@
+const {connect} = require("./model/connexion.js"); 
 const express = require("express");
 const userRoute = require("./route/user.route");
 const postRoute = require("./route/post.route");
 const commentRoute = require("./route/comment.route");
+
 
 const app = express();
 
@@ -14,6 +16,14 @@ app.use((req, res, next) => {
     next();
 });
 
+async function lauch(){
+    await connect();
+    app.listen(3000, () => {
+        console.log("Serveur lancé sur le port 3000");
+    });
+}
+
+lauch();
 app.use('/user', userRoute);
 app.use('/post', postRoute);
 app.use('/comment', commentRoute);
