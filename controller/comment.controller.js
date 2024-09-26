@@ -9,7 +9,7 @@ const Comment = require("./../model/comment.model");
  *     postId: <string>
  * }
  */
-exports.create = async () => {
+exports.create = async (req, res) => {
   try {
     const newComment = new Comment(req.body);
     await newComment.save();
@@ -27,7 +27,7 @@ exports.create = async () => {
  *     message: <string>,
  * }
  */
-exports.update = async () => {
+exports.update = async (req, res) => {
   try {
     const commentToUpdate = await Comment.findById(req.params.id);
     if (!commentToUpdate) {
@@ -45,10 +45,10 @@ exports.update = async () => {
  * Méthode pour supprimer un commentaire
  * @param id l'id du commentaire à supprimer
  */
-exports.delete = async () => {
+exports.delete = async (req, res) => {
   try {
     const commentToDelete = await Comment.findById(req.params.id);
-    if (!comment) {
+    if (!commentToDelete) {
       return res.status(404).json({ message: "Commentaire non trouvé" });
     }
     await commentToDelete.deleteOne();

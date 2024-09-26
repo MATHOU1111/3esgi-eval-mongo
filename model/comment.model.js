@@ -1,4 +1,4 @@
-const {Schema} = require('mongoose');
+const {Schema, model} = require('mongoose');
 /**
  * Créer ici le model pour post
  * 
@@ -11,4 +11,4 @@ const commentSchema = new Schema({
     postId: { type: Schema.Types.ObjectId, ref: 'post', required: true }
 }, { versionKey: false });
 
-module.exports = mongoose.model('comment', commentSchema);
+module.exports = model('comment', commentSchema);

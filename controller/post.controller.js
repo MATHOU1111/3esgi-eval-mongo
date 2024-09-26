@@ -7,9 +7,12 @@ const Post = require("./../model/post.model");
  * Si la page est 2 il faut récupérer les post du 11ème au 20ème les plus récents
  * ...
  */
-exports.getAll = async () => {
+exports.getAll = async (req, res) => {
     try{
-        const post = await Post.find();
+        let page = req.query.page;
+        let limit = 10;
+        let skip = (page - 1) * limit;
+        const post = await Post.find().sort({date: -1}).skip(skip).limit(limit);
         res.status(200).json(post);
     }catch(e){
         res.status(500).json(e.message);
@@ -19,10 +22,12 @@ exports.getAll = async () => {
 /**
  * Methode pour récupérer un post par son id, et les commentaires associés à ce post
  */
-exports.getById = async () => {
+exports.getById = async (req, res) => {
     try{
-        const postWithComment = await Post.findById(req.params.id);
-        res.status(200).json(postWithComment);
+        let id = req.params.id;
+        let post = await Post.findById(id);
+        if(!post) res.status(404).json({message: "Le post n'existe pas"});
+        res.status(200).json(post);
     }catch(e){
         res.status(500).json(e.message);
     }
@@ -36,7 +41,7 @@ exports.getById = async () => {
  *     userId: <string>
  * }
  */
-exports.create = async () => {
+exports.create = async (req, res) => {
     try{
         const newPost = new Post(req.body);
         await newPost.save();
@@ -54,7 +59,7 @@ exports.create = async () => {
  *     message: <string>
  * }
  */
-exports.update = async () => {
+exports.update = async (req, res) => {
     try{
         const message = req.body.message;
         const updatedPost = await Post.findByIdAndUpdate(req.params.id,{message, date: new Date()})
@@ -71,10 +76,10 @@ exports.update = async () => {
  * Methode pour supprimer un post (attention de bien supprimer les commentaires associés)
  * @param id l'id du post à supprimer
  */
-exports.delete = async () => {
+exports.delete = async (req, res) => {
     try{
         const postToDelete = await Post.findById(req.params.id);
-        if(!post)
+        if(!postToDelete)
         {
             res.status(404).json({message: "Le post n'existe pas"});
         }
