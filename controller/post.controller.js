@@ -9,10 +9,10 @@ const Post = require("./../model/post.model");
  */
 exports.getAll = async (req, res) => {
     try{
-        let page = req.query.page;
-        let limit = 10;
-        let skip = (page - 1) * limit;
-        const post = await Post.find().sort({date: -1}).skip(skip).limit(limit);
+        let page = req.params.page;
+        let limit = 1;
+        let pages = (page - 1) * limit;
+        const post = await Post.find().sort({date: -1}).skip(pages).limit(limit);
         res.status(200).json(post);
     }catch(e){
         res.status(500).json(e.message);
