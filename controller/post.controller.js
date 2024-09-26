@@ -9,8 +9,8 @@ const Post = require("./../model/post.model");
  */
 exports.getAll = async () => {
     try{
-        //TODO
-        res.status(200).json(listPost);
+        const post = await Post.find();
+        res.status(200).json(post);
     }catch(e){
         res.status(500).json(e.message);
     }
@@ -21,7 +21,7 @@ exports.getAll = async () => {
  */
 exports.getById = async () => {
     try{
-        //TODO
+        const postWithComment = await Post.findById(req.params.id);
         res.status(200).json(postWithComment);
     }catch(e){
         res.status(500).json(e.message);
@@ -38,8 +38,9 @@ exports.getById = async () => {
  */
 exports.create = async () => {
     try{
-        //TODO
-        res.status(201).json(post);
+        const newPost = new Post(req.body);
+        await newPost.save();
+        res.status(201).json(newPost);
     }catch(e){
         res.status(500).json(e.message);
     }
@@ -55,8 +56,12 @@ exports.create = async () => {
  */
 exports.update = async () => {
     try{
-        //TODO
+        const message = req.body.message;
+        const updatedPost = await Post.findByIdAndUpdate(req.params.id,{message, date: new Date()})
         res.status(201).json({message: "Post mis à jour"});
+        if (!updatedPost) {
+            return res.status(404).json({ message: "Post non trouvé" });
+        }
     }catch(e){
         res.status(500).json(e.message);
     }
@@ -68,7 +73,12 @@ exports.update = async () => {
  */
 exports.delete = async () => {
     try{
-        //TODO
+        const postToDelete = await Post.findById(req.params.id);
+        if(!post)
+        {
+            res.status(404).json({message: "Le post n'existe pas"});
+        }
+        await postToDelete.deleteOne();
         res.status(200).json({message: "Post supprimé"});
     }catch(e){
         res.status(500).json(e.message);
